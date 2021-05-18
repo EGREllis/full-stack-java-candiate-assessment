@@ -60,6 +60,9 @@ class OwnerControllerTests {
 	private OwnerRepository owners;
 
 	@MockBean
+	private OwnerDynamicRepository dynamicOwner;
+
+	@MockBean
 	private VisitRepository visits;
 
 	private Owner george;

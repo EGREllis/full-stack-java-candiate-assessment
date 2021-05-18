@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,11 +44,14 @@ class OwnerController {
 
 	private final OwnerRepository owners;
 
+	private final OwnerDynamicRepository dynamicOwners;
+
 	private VisitRepository visits;
 
-	public OwnerController(OwnerRepository clinicService, VisitRepository visits) {
+	public OwnerController(OwnerRepository clinicService, VisitRepository visits, OwnerDynamicRepository dynamicOwners) {
 		this.owners = clinicService;
 		this.visits = visits;
+		this.dynamicOwners = dynamicOwners;
 	}
 
 	@InitBinder
@@ -88,7 +92,7 @@ class OwnerController {
 		}
 
 		// find owners by last name
-		Collection<Owner> results = this.owners.findByLastName(owner.getLastName());
+		Collection<Owner> results = this.dynamicOwners.findOwnerByFields(owner.getFirstName(), owner.getLastName(), owner.getAddress(), owner.getCity(), owner.getTelephone());
 		if (results.isEmpty()) {
 			// no owners found
 			result.rejectValue("lastName", "notFound", "not found");
